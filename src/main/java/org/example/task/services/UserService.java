@@ -1,33 +1,43 @@
 package org.example.task.services;
 
+import org.example.task.models.Role;
 import org.example.task.models.User;
+import org.example.task.repositories.RoleRepository;
 import org.example.task.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
+
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(){
+        this.passwordEncoder = new BCryptPasswordEncoder();
+    }
+
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private RoleRepository roleRepository;
 
-    public User createUser(String username, String password, String role) {
+    public User registerUser(String username, String password, String roleName) {
+        Role role = roleRepository.findByRoleName(roleName);
         User user = new User();
         user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password));
+        String hashedPassword = passwordEncoder.encode(password);
+        user.setPassword(hashedPassword);
         user.setRole(role);
+
         return userRepository.save(user);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+    public User getByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
+
 }
 
