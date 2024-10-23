@@ -6,6 +6,13 @@ import jakarta.persistence.*;
 @Table(name = "roles")
 public class Role {
 
+    /*
+        Existing roles:
+        - admin (create holds events)
+        - visitor (attends created events)
+        - principal (accepts event creation)
+    */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

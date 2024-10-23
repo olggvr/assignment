@@ -1,5 +1,6 @@
 package org.example.task;
 
+import org.example.task.services.UserService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

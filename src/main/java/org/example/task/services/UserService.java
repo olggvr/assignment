@@ -25,7 +25,7 @@ public class UserService {
     private RoleRepository roleRepository;
 
     public User registerUser(String username, String password, String roleName) {
-        Role role = roleRepository.findByRoleName(roleName);
+        Role role = roleRepository.findByName(roleName);
         User user = new User();
         user.setUsername(username);
         String hashedPassword = passwordEncoder.encode(password);
