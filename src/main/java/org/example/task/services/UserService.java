@@ -54,7 +54,7 @@ public class UserService {
         return user;
     }
 
-    public void registerUser(String username, String password, String roleName) {
+    public void registerUser(String username, String password, String roleName){
         validateUserData(username, password, roleName);
         User user = initUser(username, password, roleName);
         logger.info("User initialized");
