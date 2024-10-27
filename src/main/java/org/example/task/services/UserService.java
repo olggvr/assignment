@@ -1,5 +1,6 @@
 package org.example.task.services;
 
+import org.example.task.exceptions.UserNotFoundException;
 import org.example.task.models.Role;
 import org.example.task.models.User;
 import org.example.task.repositories.RoleRepository;
@@ -65,6 +66,13 @@ public class UserService {
         }catch (Exception e) {
             logger.error("Error with saving user to database: {}", e.getMessage());
         }
+    }
+
+    public void deleteUser(long id){
+        if (!userRepository.existsById(id)) {
+            throw new UserNotFoundException("User with id " + id + " not found");
+        }
+        userRepository.deleteById(id);
     }
 
     public User getByUsername(String username) {
