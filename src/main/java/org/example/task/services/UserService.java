@@ -55,16 +55,17 @@ public class UserService {
         return user;
     }
 
-    public void registerUser(User user){
+    public User registerUser(User user){
         validateUserData(user.getUsername(), user.getPassword(), user.getRole().getName());
         User iniUser = initUser(user.getUsername(), user.getPassword(), user.getRole().getName());
         logger.info("User initialized");
 
         try {
-            this.userRepository.save(iniUser);
             logger.info("User saved to database: {}, id: {}", iniUser.getUsername(), iniUser.getId());
+            return this.userRepository.save(iniUser);
         }catch (Exception e) {
             logger.error("Error with saving user to database: {}", e.getMessage());
+            return null;
         }
     }
 
