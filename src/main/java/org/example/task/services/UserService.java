@@ -54,14 +54,14 @@ public class UserService {
         return user;
     }
 
-    public void registerUser(String username, String password, String roleName){
-        validateUserData(username, password, roleName);
-        User user = initUser(username, password, roleName);
+    public void registerUser(User user){
+        validateUserData(user.getUsername(), user.getPassword(), user.getRole().getName());
+        User iniUser = initUser(user.getUsername(), user.getPassword(), user.getRole().getName());
         logger.info("User initialized");
 
         try {
-            this.userRepository.save(user);
-            logger.info("User saved to database: {}, id: {}", username, user.getId());
+            this.userRepository.save(iniUser);
+            logger.info("User saved to database: {}, id: {}", iniUser.getUsername(), iniUser.getId());
         }catch (Exception e) {
             logger.error("Error with saving user to database: {}", e.getMessage());
         }

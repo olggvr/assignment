@@ -1,5 +1,6 @@
 package org.example.task.controllers;
 
+import org.example.task.models.User;
 import org.example.task.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,12 +23,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> createUser(@RequestBody String username, String password, String role) {
+    public ResponseEntity<String> createUser(@RequestBody User user) {
 
-        logger.info("Received registration request for user: {}", username);
+        logger.info("Received registration request for user: {}", user.getUsername());
         try{
 
-            this.userService.registerUser(username, password, role);
+            this.userService.registerUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
 
         }catch (Exception e){
