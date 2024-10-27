@@ -1,6 +1,5 @@
 package org.example.task.services;
 
-import org.example.task.controllers.UserController;
 import org.example.task.models.Role;
 import org.example.task.models.User;
 import org.example.task.repositories.RoleRepository;
@@ -27,21 +26,45 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
-    public User registerUser(String username, String password, String roleName) {
-        User user = new User();
-        try {
-            Role role = this.roleRepository.findByName(roleName);
-            user.setUsername(username);
-            String hashedPassword = this.passwordEncoder.encode(password);
-            user.setPassword(hashedPassword);
-            user.setRole(role);
-
-            logger.info("User created: {}", username);
-        }catch (Exception e) {
-            logger.error("Error with user registration: {}", e.getMessage());
+    private void validateUserData(String username, String password, String roleName) throws IllegalArgumentException{
+        if(username == null || username.isEmpty()){
+            logger.error("Validation error in User service: Username is null or empty");
+            throw new IllegalArgumentException("Username is null or empty");
         }
+        if(password == null || password.isEmpty()){
+            logger.error("Validation error in User service: Password is null or empty");
+            throw new IllegalArgumentException("Password is null or empty");
+        }
+        if(roleName == null || roleName.isEmpty()){
+            logger.error("Validation error in User service: Role name is null or empty");
+            throw new IllegalArgumentException("Role name is null or empty");
+        }
+    }
 
-        return this.userRepository.save(user);
+    private User initUser(String username, String password, String roleName){
+
+        User user = new User();
+        user.setUsername(username);
+        String hashedPassword = this.passwordEncoder.encode(password);
+        user.setPassword(hashedPassword);
+
+        Role role = this.roleRepository.findByName(roleName);
+        user.setRole(role);
+
+        return user;
+    }
+
+    public void registerUser(String username, String password, String roleName) {
+        validateUserData(username, password, roleName);
+        User user = initUser(username, password, roleName);
+        logger.info("User initialized");
+
+        try {
+            this.userRepository.save(user);
+            logger.info("User saved to database: {}, id: {}", username, user.getId());
+        }catch (Exception e) {
+            logger.error("Error with saving user to database: {}", e.getMessage());
+        }
     }
 
     public User getByUsername(String username) {
