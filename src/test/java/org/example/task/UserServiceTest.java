@@ -1,8 +1,6 @@
 package org.example.task;
 
 import org.example.task.exceptions.UserNotFoundException;
-import org.example.task.models.Role;
-import org.example.task.models.User;
 import org.example.task.repositories.UserRepository;
 import org.example.task.services.UserService;
 import org.junit.jupiter.api.Assertions;

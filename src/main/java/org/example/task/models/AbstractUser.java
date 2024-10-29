@@ -1,10 +1,17 @@
 package org.example.task.models;
 
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
-public class User {
+public abstract class AbstractUser {
+
+    public enum Role {
+        PRINCIPAL,
+        ADMIN,
+        VISITOR
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,13 +24,12 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @OneToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    @Column(nullable = false)
     private Role role;
 
-    public User() {}
+    public AbstractUser() {}
 
-    public User(String username, String password, Role role) {
+    public AbstractUser(String username, String password, Role role) {
         this.username = username;
         this.password = password;
         this.role = role;
@@ -41,7 +47,9 @@ public class User {
         this.username = username;
     }
 
-    public String getPassword() { return password;}
+    public String getPassword() {
+        return password;
+    }
 
     public void setPassword(String password) {
         this.password = password;
@@ -49,9 +57,5 @@ public class User {
 
     public Role getRole() {
         return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 }

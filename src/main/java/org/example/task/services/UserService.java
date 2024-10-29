@@ -1,9 +1,7 @@
 package org.example.task.services;
 
 import org.example.task.exceptions.UserNotFoundException;
-import org.example.task.models.Role;
-import org.example.task.models.User;
-import org.example.task.repositories.RoleRepository;
+import org.example.task.models.AbstractUser;
 import org.example.task.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,7 +74,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public User getByUsername(String username) {
+    public AbstractUser getByUsername(String username) {
         return this.userRepository.findByUsername(username);
     }
 

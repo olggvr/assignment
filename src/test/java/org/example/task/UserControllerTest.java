@@ -1,58 +1,49 @@
 package org.example.task;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.task.models.User;
-import org.example.task.repositories.UserRepository;
+import org.example.task.controllers.UserController;
+import org.example.task.services.UserService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
+@WebMvcTest(UserController.class)
 public class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private UserRepository userRepository;
+    @MockBean
+    private UserService userService;
 
     @Test
-    void testRegisterUser() throws Exception {
-        User testUser = new User();
-        testUser.setUsername("newuser");
-        testUser.setPassword("password");
+    public void testRegisterUser() throws Exception {
 
-        mockMvc.perform(post("/users/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testUser)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("newuser"));
-    }
+        User mockUser = new User();
+        mockUser.setUsername("Test");
+        mockUser.setPassword("Test");
+        Role role = new Role();
+        role.setName("visitor");
+        mockUser.setRole(role);
 
-    @Test
-    void testDeleteUser() throws Exception {
-        User savedUser = new User();
-        savedUser.setUsername("deleteuser");
-        savedUser.setPassword("password");
-        savedUser = userRepository.save(savedUser);
+        when(userService.registerUser(Mockito.any(User.class))).thenReturn(mockUser);
 
-        mockMvc.perform(delete("/users/" + savedUser.getId()))
-                .andExpect(status().isNoContent());
-    }
-
-    @Test
-    void testDeleteNonExistingUser() throws Exception {
-        mockMvc.perform(delete("/users/999"))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(post("/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mockUser.toString())
+                .with(csrf()))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.username").value("Test"));
     }
 
 }

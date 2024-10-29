@@ -1,7 +1,6 @@
 package org.example.task.controllers;
 
 import org.example.task.exceptions.UserNotFoundException;
-import org.example.task.models.User;
 import org.example.task.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
