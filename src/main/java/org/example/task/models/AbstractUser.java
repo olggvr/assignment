@@ -1,9 +1,23 @@
 package org.example.task.models;
 
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Admin.class, name = "admin"),
+        @JsonSubTypes.Type(value = Visitor.class, name = "visitor"),
+        @JsonSubTypes.Type(value = Principal.class, name = "principal")
+})
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "users")
 public abstract class AbstractUser {
 
@@ -24,6 +38,7 @@ public abstract class AbstractUser {
     @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
@@ -58,4 +73,6 @@ public abstract class AbstractUser {
     public Role getRole() {
         return role;
     }
+
+    public void setRole(Role role) {this.role = role;}
 }

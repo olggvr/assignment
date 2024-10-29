@@ -1,6 +1,7 @@
 package org.example.task.controllers;
 
 import org.example.task.exceptions.UserNotFoundException;
+import org.example.task.models.AbstractUser;
 import org.example.task.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +22,10 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> createUser(@RequestBody User user) {
+    public ResponseEntity<String> createUser(@RequestBody AbstractUser user) {
 
         logger.info("Received registration request for user: {}", user.getUsername());
         try{
-
             this.userService.registerUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
 

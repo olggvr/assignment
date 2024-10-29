@@ -2,6 +2,9 @@ package org.example.task.services;
 
 import org.example.task.exceptions.UserNotFoundException;
 import org.example.task.models.AbstractUser;
+import org.example.task.models.Admin;
+import org.example.task.models.Principal;
+import org.example.task.models.Visitor;
 import org.example.task.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,35 +26,37 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    private void validateUserData(String username, String password, String roleName) throws IllegalArgumentException{
-        if(username == null || username.isEmpty()){
+    private void validateUserData(AbstractUser user) throws IllegalArgumentException{
+        String name = user.getUsername();
+        String pass = user.getPassword();
+        AbstractUser.Role role = user.getRole();
+        if(name == null || name.isEmpty()){
             logger.error("Validation error in User service: Username is null or empty");
             throw new IllegalArgumentException("Username is null or empty");
         }
-        if(password == null || password.isEmpty()){
+        if(pass == null || pass.isEmpty()){
             logger.error("Validation error in User service: Password is null or empty");
             throw new IllegalArgumentException("Password is null or empty");
         }
-        if(roleName == null || roleName.isEmpty()){
-            logger.error("Validation error in User service: Role name is null or empty");
-            throw new IllegalArgumentException("Role name is null or empty");
+        if(!role.equals(AbstractUser.Role.ADMIN) && !role.equals(AbstractUser.Role.VISITOR) && !role.equals(AbstractUser.Role.PRINCIPAL)){
+            logger.error("Validation error in User service: user role is not valid");
+            throw new IllegalArgumentException("user role is not valid");
         }
     }
 
-    private User initUser(String username, String password, String roleName){
+    private AbstractUser initUser(AbstractUser user) {
 
-        User user = new User();
-        user.setUsername(username);
-        String hashedPassword = this.passwordEncoder.encode(password);
-        user.setPassword(hashedPassword);
-        user.setRole(role);
-
-        return user;
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return switch (user.getRole()) {
+            case ADMIN -> new Admin(user);
+            case VISITOR -> new Visitor(user);
+            case PRINCIPAL -> new Principal(user);
+        };
     }
 
-    public User registerUser(User user){
-        validateUserData(user.getUsername(), user.getPassword(), user.getRole().getName());
-        User iniUser = initUser(user.getUsername(), user.getPassword(), user.getRole().getName());
+    public AbstractUser registerUser(AbstractUser user){
+        validateUserData(user);
+        AbstractUser iniUser = initUser(user);
         logger.info("User initialized");
 
         try {
