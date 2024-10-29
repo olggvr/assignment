@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -33,6 +35,10 @@ public class UserService {
         if(name == null || name.isEmpty()){
             logger.error("Validation error in User service: Username is null or empty");
             throw new IllegalArgumentException("Username is null or empty");
+        }
+        if (getByUsername(name).isPresent()){
+            logger.error("Validation error in User service: Username already exists");
+            throw new IllegalArgumentException("Username already exists");
         }
         if(pass == null || pass.isEmpty()){
             logger.error("Validation error in User service: Password is null or empty");
@@ -75,7 +81,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public AbstractUser getByUsername(String username) {
+    public Optional<AbstractUser> getByUsername(String username) {
         return this.userRepository.findByUsername(username);
     }
 

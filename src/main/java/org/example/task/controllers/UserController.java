@@ -8,6 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,10 +20,12 @@ public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
+    private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public UserController(final UserService userService) {
+    public UserController(final UserService userService, AuthenticationManager authenticationManager) {
         this.userService = userService;
+        this.authenticationManager = authenticationManager;
     }
 
     @PostMapping("/register")
@@ -34,6 +41,29 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
+    }
+
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String testAdmin(){
+        return "Hello admin";
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) {
+        logger.info("Received login request for user: {}", username);
+        try{
+            UsernamePasswordAuthenticationToken authRequest =
+                    new UsernamePasswordAuthenticationToken(username, password);
+
+            Authentication authentication = authenticationManager.authenticate(authRequest);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            logger.info("Authentication successful for user: {}", username);
+            return ResponseEntity.status(HttpStatus.OK).body("auth successful");
+        }catch (Exception e){
+            logger.error("Error while authenticating user: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/delete/{id}")
