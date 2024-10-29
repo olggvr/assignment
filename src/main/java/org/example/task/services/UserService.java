@@ -14,15 +14,13 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
     }
 
     private void validateUserData(String username, String password, String roleName) throws IllegalArgumentException{
@@ -46,8 +44,6 @@ public class UserService {
         user.setUsername(username);
         String hashedPassword = this.passwordEncoder.encode(password);
         user.setPassword(hashedPassword);
-
-        Role role = this.roleRepository.findByName(roleName);
         user.setRole(role);
 
         return user;
