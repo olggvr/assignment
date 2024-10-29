@@ -1,9 +1,10 @@
 package org.example.task.models;
 
 import jakarta.persistence.Entity;
+import org.example.task.interfaces.PrincipalHandles;
 
 @Entity
-public class Principal extends AbstractUser{
+public class Principal extends AbstractUser implements PrincipalHandles {
 
     public Principal(){}
 

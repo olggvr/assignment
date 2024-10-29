@@ -1,9 +1,10 @@
 package org.example.task.models;
 
 import jakarta.persistence.Entity;
+import org.example.task.interfaces.VisitorHandles;
 
 @Entity
-public class Visitor extends AbstractUser{
+public class Visitor extends AbstractUser implements VisitorHandles {
 
     public Visitor(){}
 
