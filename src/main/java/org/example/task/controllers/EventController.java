@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/admin")
 public class EventController {
 
     private static final Logger logger = LoggerFactory.getLogger(EventController.class);
@@ -27,8 +27,13 @@ public class EventController {
         this.userService = userService;
     }
 
+    @GetMapping("/home")
+    public String home(@AuthenticationPrincipal UserDetails user) {
+        return "home of " + user.getUsername();
+    }
+
     @PostMapping("/create")
-    private ResponseEntity<String> createEvent(@RequestParam String title,
+    public ResponseEntity<String> createEvent(@RequestParam String title,
                                                @AuthenticationPrincipal UserDetails userDetails){
         logger.info("Get request on event creation: {}", title);
         try{

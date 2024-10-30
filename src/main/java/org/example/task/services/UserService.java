@@ -37,7 +37,7 @@ public class UserService {
             logger.error("Validation error in User service: Username is null or empty");
             throw new IllegalArgumentException("Username is null or empty");
         }
-        if (getByUsername(name) == null){
+        if (getByUsername(name) != null){
             logger.error("Validation error in User service: Username already exists");
             throw new IllegalArgumentException("Username already exists");
         }
@@ -67,7 +67,6 @@ public class UserService {
         logger.info("User initialized");
 
         try {
-            logger.info("User saved to database: {}, id: {}", iniUser.getUsername(), iniUser.getId());
             return this.userRepository.save(iniUser);
         }catch (Exception e) {
             logger.error("Error with saving user to database: {}", e.getMessage());

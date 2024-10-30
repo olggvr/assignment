@@ -43,14 +43,16 @@ public class UserController {
 
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<String> login(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) {
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
         logger.info("Received login request for user: {}", username);
         try{
+            logger.info("Test1: {}", username);
             UsernamePasswordAuthenticationToken authRequest =
                     new UsernamePasswordAuthenticationToken(username, password);
 
             Authentication authentication = authenticationManager.authenticate(authRequest);
+            logger.info("Test2: {}", username);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             logger.info("Authentication successful for user: {}", username);
             return ResponseEntity.status(HttpStatus.OK).body("auth successful");
