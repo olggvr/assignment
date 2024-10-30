@@ -1,6 +1,7 @@
 package org.example.task.models;
 
 import jakarta.persistence.Entity;
+import org.example.task.enums.Role;
 import org.example.task.interfaces.PrincipalHandles;
 
 @Entity

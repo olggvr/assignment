@@ -4,6 +4,7 @@ package org.example.task.models;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
+import org.example.task.enums.Role;
 
 
 @JsonTypeInfo(
@@ -20,12 +21,6 @@ import jakarta.persistence.*;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "users")
 public abstract class AbstractUser {
-
-    public enum Role {
-        PRINCIPAL,
-        ADMIN,
-        VISITOR
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

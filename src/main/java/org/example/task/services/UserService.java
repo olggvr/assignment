@@ -1,5 +1,6 @@
 package org.example.task.services;
 
+import org.example.task.enums.Role;
 import org.example.task.exceptions.UserNotFoundException;
 import org.example.task.models.AbstractUser;
 import org.example.task.models.Admin;
@@ -31,7 +32,7 @@ public class UserService {
     private void validateUserData(AbstractUser user) throws IllegalArgumentException{
         String name = user.getUsername();
         String pass = user.getPassword();
-        AbstractUser.Role role = user.getRole();
+        Role role = user.getRole();
         if(name == null || name.isEmpty()){
             logger.error("Validation error in User service: Username is null or empty");
             throw new IllegalArgumentException("Username is null or empty");
@@ -44,7 +45,7 @@ public class UserService {
             logger.error("Validation error in User service: Password is null or empty");
             throw new IllegalArgumentException("Password is null or empty");
         }
-        if(!role.equals(AbstractUser.Role.ADMIN) && !role.equals(AbstractUser.Role.VISITOR) && !role.equals(AbstractUser.Role.PRINCIPAL)){
+        if(!role.equals(Role.ADMIN) && !role.equals(Role.VISITOR) && !role.equals(Role.PRINCIPAL)){
             logger.error("Validation error in User service: user role is not valid");
             throw new IllegalArgumentException("user role is not valid");
         }
