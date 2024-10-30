@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/")
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);

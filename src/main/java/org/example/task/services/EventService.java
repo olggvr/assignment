@@ -1,5 +1,8 @@
 package org.example.task.services;
 
+import org.example.task.enums.EventStatus;
+import org.example.task.models.AbstractUser;
+import org.example.task.models.Admin;
 import org.example.task.models.Event;
 import org.example.task.repositories.EventRepository;
 import org.slf4j.Logger;
@@ -17,8 +20,13 @@ public class EventService {
 
     private void validateCreationAccessed(){}
 
-    public Event createEvent(Event event) {
+    public Event createEvent(String title, AbstractUser admin) {
         validateCreationAccessed();
+        Event event = new Event();
+        event.setTitle(title);
+        event.setCreatedBy((Admin) admin);
+        event.setStatus(EventStatus.APPROVED);
+
         logger.info("Validation passed, creating event: {}", event.getTitle());
 
         try{

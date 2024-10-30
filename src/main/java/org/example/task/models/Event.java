@@ -15,8 +15,8 @@ public class Event {
     @Column(name = "title", nullable = false)
     private String title;
 
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false)
-    @ManyToOne
     private Admin createdBy;
 
     @Enumerated(EnumType.STRING)

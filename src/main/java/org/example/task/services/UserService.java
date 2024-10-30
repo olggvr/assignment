@@ -37,7 +37,7 @@ public class UserService {
             logger.error("Validation error in User service: Username is null or empty");
             throw new IllegalArgumentException("Username is null or empty");
         }
-        if (getByUsername(name).isPresent()){
+        if (getByUsername(name) == null){
             logger.error("Validation error in User service: Username already exists");
             throw new IllegalArgumentException("Username already exists");
         }
@@ -82,7 +82,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public Optional<AbstractUser> getByUsername(String username) {
+    public AbstractUser getByUsername(String username) {
         return this.userRepository.findByUsername(username);
     }
 
