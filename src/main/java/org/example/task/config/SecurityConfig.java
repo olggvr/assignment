@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,18 +23,25 @@ public class SecurityConfig {
     }
 
     @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring().requestMatchers(
+                "/custom/swagger-ui/**", "/v3/api-docs/**"
+        );
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/register", "/delete/**").permitAll()
+                        .requestMatchers("/custom/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui/index.html").permitAll()
+                        .requestMatchers("/register").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/principal/**").hasRole("PRINCIPAL")
                         .requestMatchers("/visitor/**").hasRole("VISITOR")
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .successHandler(new CustomAuthSuccessHandler())
                         .permitAll()
                 )
                 .build();
