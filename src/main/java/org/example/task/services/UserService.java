@@ -81,8 +81,9 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public AbstractUser getByUsername(String username) {
-        return this.userRepository.findByUsername(username);
+    @SuppressWarnings("unchecked")
+    public <T extends AbstractUser> T getByUsername(String username) {
+        return (T) this.userRepository.findByUsername(username);
     }
 
 }
