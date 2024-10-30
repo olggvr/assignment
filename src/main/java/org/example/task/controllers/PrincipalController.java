@@ -46,6 +46,7 @@ public class PrincipalController {
         Optional<AbstractUser> principalOpt = userRepository.findById(principalId);
 
         if(adminOpt.isEmpty() || principalOpt.isEmpty()){
+            logger.error("Admin or principal not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
@@ -53,11 +54,13 @@ public class PrincipalController {
         AbstractUser principal = principalOpt.get();
 
         if (!(admin instanceof Admin) || !(principal instanceof Principal)) {
+            logger.error("Bad request: admin or principal values are not validatable");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         Optional<Contract> contractOpt = contractRepository.findByAdminAndPrincipal((Admin) admin, (Principal) principal);
         if (contractOpt.isEmpty()) {
+            logger.error("Error: contract not found, nothing to sign");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 

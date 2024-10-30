@@ -75,6 +75,7 @@ public class EventController {
         Optional<AbstractUser> principalOpt = userRepository.findById(principalId);
 
         if (adminOpt.isEmpty() || principalOpt.isEmpty()){
+            logger.error("Admin or principal not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
@@ -82,7 +83,13 @@ public class EventController {
         AbstractUser principal = principalOpt.get();
 
         if (!(admin instanceof Admin) || !(principal instanceof Principal)) {
+            logger.error("Bad request: admin or principal values are not validatable");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        if (contractRepository.findByAdminAndPrincipal((Admin) admin, (Principal) principal).isPresent()){
+            logger.error("Contract already exists");
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
         Contract contract = new Contract((Admin) admin, (Principal) principal);
