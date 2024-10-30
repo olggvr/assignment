@@ -1,5 +1,6 @@
 package org.example.task.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.example.task.enums.EventStatus;
 
@@ -17,6 +18,7 @@ public class Event {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false)
+    @JsonIgnore
     private Admin createdBy;
 
     @Enumerated(EnumType.STRING)

@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class EventService {
 
@@ -39,6 +41,10 @@ public class EventService {
 
         logger.info("Validation passed, creating event: {}", event.getTitle());
         return eventRepository.save(event);
+    }
+
+    public List<Event> getAllEvents() {
+        return eventRepository.findAll();
     }
 
 }
