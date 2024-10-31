@@ -58,6 +58,10 @@ public class Contract {
         return isSigned;
     }
 
+    public void setSigned(boolean isSigned){
+        this.isSigned = isSigned;
+    }
+
     public void sign() {
         this.isSigned = true;
     }
