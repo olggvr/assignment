@@ -1,6 +1,5 @@
 package org.example.task.controllers;
 
-import org.example.task.models.AbstractUser;
 import org.example.task.models.Event;
 import org.example.task.models.Visitor;
 import org.example.task.services.EventService;
@@ -14,7 +13,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
