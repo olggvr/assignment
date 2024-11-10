@@ -80,3 +80,13 @@ Also using **Swagger UI** as quick UI realisation
 ## Additional info
 - All data saves in MySQL db server
 - App is developed with **Solid** principles, it provides ease testing and flexibility
+
+## Run with docker
+```
+git clone https://github.com/olggvr/assignment.git
+docker compose up -d
+```
+To update compose:
+```
+docker compose up --build -d
+```
