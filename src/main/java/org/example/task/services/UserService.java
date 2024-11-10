@@ -67,7 +67,7 @@ public class UserService {
         logger.info("User initialized");
 
         try {
-            return this.userRepository.save(iniUser);
+            return userRepository.save(iniUser);
         }catch (Exception e) {
             logger.error("Error with saving user to database: {}", e.getMessage());
             return null;

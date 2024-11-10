@@ -1,16 +1,11 @@
 
-FROM openjdk:17-jdk-alpine
-
+FROM gradle:7.2-jdk17 AS build
 COPY --chown=gradle:gradle .. /home/gradle/src
-
 WORKDIR /home/gradle/src
-
-COPY gradlew /home/gradle/src
-
-RUN chmod +x ./gradlew
-
 RUN ./gradlew build --no-daemon
 
-RUN cp /build/libs/*.jar app.jar
-
-CMD ["java", "-jar", "app.jar"]
+FROM openjdk:17-jdk-alpine
+WORKDIR /home/gradle/src
+COPY --from=build /home/gradle/src/build/libs/*.jar /app/app.jar
+EXPOSE 8080
+CMD ["java", "-jar", "/app/app.jar"]

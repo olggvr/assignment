@@ -33,7 +33,7 @@ public class UserController {
 
         logger.info("Received registration request for user: {}", user.getUsername());
         try{
-            this.userService.registerUser(user);
+            userService.registerUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
 
         }catch (Exception e){
